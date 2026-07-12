@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ruleset name="Laranail Notifications Coding Standard">
+    <description>PSR-12 conformance lint for laranail/notifications (formatting is owned by Pint).</description>
+
+    <arg value="p"/>
+    <arg value="s"/>
+    <arg name="colors"/>
+
+    <!-- Line-length and similar warnings stay visible but do not fail the gate. -->
+    <config name="ignore_warnings_on_exit" value="1"/>
+
+    <!-- Paths to check -->
+    <file>src</file>
+    <file>tests</file>
+
+    <!-- Exclude paths -->
+    <exclude-pattern>vendor/*</exclude-pattern>
+    <exclude-pattern>*/node_modules/*</exclude-pattern>
+    <!-- Fixtures are data/tooling, not style-governed source. -->
+    <exclude-pattern>tests/Fixtures/*</exclude-pattern>
+
+    <!-- PSR-12 base. Pint owns formatting; exclude the sniffs that fight its
+         PER-style single-line empty bodies (`class Foo {}` / `) {}`). -->
+    <rule ref="PSR12">
+        <exclude name="Squiz.WhiteSpace.ScopeClosingBrace.ContentBefore"/>
+        <exclude name="PSR2.Classes.ClassDeclaration.OpenBraceNewLine"/>
+    </rule>
+
+    <!-- Test methods follow PHPUnit's snake_case convention. -->
+    <rule ref="PSR1.Methods.CamelCapsMethodName.NotCamelCaps">
+        <exclude-pattern>tests/*</exclude-pattern>
+    </rule>
+
+    <!-- Tests may colocate small fixture classes alongside the test class. -->
+    <rule ref="PSR1.Classes.ClassDeclaration.MultipleClasses">
+        <exclude-pattern>tests/*</exclude-pattern>
+    </rule>
+
+    <!-- Clean-code (built-in sniffs only) -->
+    <rule ref="Generic.Arrays.DisallowLongArraySyntax"/>
+    <rule ref="Generic.CodeAnalysis.EmptyStatement"/>
+    <rule ref="Generic.CodeAnalysis.UnconditionalIfStatement"/>
+    <rule ref="Generic.CodeAnalysis.UnnecessaryFinalModifier"/>
+    <rule ref="Generic.CodeAnalysis.UselessOverridingMethod"/>
+    <rule ref="Squiz.WhiteSpace.SuperfluousWhitespace"/>
+</ruleset>

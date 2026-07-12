@@ -1,0 +1,35 @@
+# PHPStan configuration for laranail/notifications (PHPStan 2.x + Larastan).
+#
+# TODO (test owner): run `composer update` to install larastan, then
+#   `vendor/bin/phpstan analyse --generate-baseline phpstan-baseline.neon`
+# only if level-8 surfaces residual inherited debt, and uncomment the
+# baseline include below. The goal is a clean level-8 run with no baseline;
+# add one only if genuinely needed, and ratchet it down over time.
+
+includes:
+    - vendor/larastan/larastan/extension.neon
+    # - phpstan-baseline.neon
+
+parameters:
+    level: 8
+
+    paths:
+        - src
+
+    bootstrapFiles:
+        - vendor/autoload.php
+
+    ignoreErrors:
+        # Laravel facades / magic helpers resolve dynamically.
+        - '#Call to an undefined method Illuminate\\.*#'
+        - '#Access to an undefined property Illuminate\\.*#'
+
+    excludePaths:
+        - vendor/*
+
+    reportUnmatchedIgnoredErrors: false
+
+    parallel:
+        jobSize: 20
+        maximumNumberOfProcesses: 4
+        minimumNumberOfJobsPerProcess: 2

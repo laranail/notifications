@@ -1,0 +1,97 @@
+{
+    "name": "laranail/notifications",
+    "description": "Multi-channel notifications for Laravel \u2014 12 SSRF-guarded channels (mail, slack, discord, sms, webhook, push, etc.) behind a unified, typed fluent API.",
+    "type": "library",
+    "license": "MIT",
+    "keywords": [
+        "laravel",
+        "laranail",
+        "notifications",
+        "slack",
+        "discord",
+        "sms",
+        "webhook",
+        "push",
+        "channels"
+    ],
+    "homepage": "https://opensource.simtabi.com/products/laranail/notifications",
+    "authors": [
+        {
+            "name": "Imani Manyara",
+            "email": "imani@simtabi.com",
+            "homepage": "https://www.imanimanyara.com",
+            "role": "Developer"
+        },
+        {
+            "name": "Simtabi LLC",
+            "email": "opensource@simtabi.com",
+            "homepage": "https://opensource.simtabi.com",
+            "role": "Organization"
+        }
+    ],
+    "support": {
+        "issues": "https://github.com/laranail/notifications/issues",
+        "source": "https://github.com/laranail/notifications",
+        "docs": "https://opensource.simtabi.com/documentation/laranail/notifications/"
+    },
+    "require": {
+        "php": "^8.3 || ^8.4 || ^8.5",
+        "illuminate/bus": "^13.0",
+        "illuminate/cache": "^13.0",
+        "illuminate/contracts": "^13.0",
+        "illuminate/database": "^13.0",
+        "illuminate/http": "^13.0",
+        "illuminate/mail": "^13.0",
+        "illuminate/queue": "^13.0",
+        "illuminate/support": "^13.0",
+        "psr/log": "^3.0"
+    },
+    "require-dev": {
+        "larastan/larastan": "^3.0",
+        "laravel/pint": "^1.18",
+        "mockery/mockery": "^1.6",
+        "orchestra/testbench": "^11.0",
+        "pestphp/pest": "^3.0",
+        "phpunit/phpunit": "^11.0",
+        "rector/rector": "^2.0",
+        "roave/security-advisories": "dev-latest",
+        "squizlabs/php_codesniffer": "^3.10"
+    },
+    "minimum-stability": "stable",
+    "prefer-stable": true,
+    "autoload": {
+        "psr-4": {
+            "Simtabi\\Laranail\\Notifications\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Simtabi\\Laranail\\Notifications\\Tests\\": "tests/"
+        }
+    },
+    "config": {
+        "sort-packages": true,
+        "allow-plugins": {
+            "pestphp/pest-plugin": true
+        }
+    },
+    "scripts": {
+        "test": "pest",
+        "test:coverage": "pest --coverage --min=80",
+        "analyse": "phpstan analyse",
+        "format": "pint"
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "Simtabi\\Laranail\\Notifications\\Providers\\NotificationsServiceProvider"
+            ],
+            "aliases": {
+                "Notifications": "Simtabi\\Laranail\\Notifications\\Facades\\Notifications"
+            }
+        },
+        "branch-alias": {
+            "dev-main": "0.1.x-dev"
+        }
+    }
+}

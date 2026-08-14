@@ -120,7 +120,7 @@ class ChannelEdgeCasesTest extends TestCase
 
     public function test_console_channel_writes_errors_to_error_output(): void
     {
-        $output = new ConsoleOutput;
+        $output = new ConsoleOutput();
         $channel = new ConsoleChannel([], $output);
 
         $message = new NotificationMessage('boom', level: 'error', options: ['code' => 500]);
@@ -130,7 +130,7 @@ class ChannelEdgeCasesTest extends TestCase
 
     public function test_console_channel_includes_data_when_enabled(): void
     {
-        $output = new BufferedOutput;
+        $output = new BufferedOutput();
         $channel = new ConsoleChannel(['show_data' => true], $output);
 
         $this->assertTrue($channel->send(new NotificationMessage('with data', options: ['k' => 'v'])));
@@ -142,7 +142,7 @@ class ChannelEdgeCasesTest extends TestCase
 
     public function test_console_channel_omits_data_when_disabled(): void
     {
-        $output = new BufferedOutput;
+        $output = new BufferedOutput();
         $channel = new ConsoleChannel(['show_data' => false], $output);
 
         $this->assertTrue($channel->send(new NotificationMessage('no data', options: ['k' => 'v'])));

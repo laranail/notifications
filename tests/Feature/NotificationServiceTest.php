@@ -61,7 +61,7 @@ class NotificationServiceTest extends TestCase
     {
         $this->expectException(InvalidArgumentException::class);
 
-        (new NotificationService)->registerChannel('nope', new LogChannel);
+        (new NotificationService())->registerChannel('nope', new LogChannel());
     }
 
     #[Group('security')]
@@ -69,7 +69,7 @@ class NotificationServiceTest extends TestCase
     {
         $this->expectException(InvalidArgumentException::class);
 
-        (new NotificationService)->setDefaultChannels(['log', 'bogus']);
+        (new NotificationService())->setDefaultChannels(['log', 'bogus']);
     }
 
     public function test_channels_selector_accepts_string(): void

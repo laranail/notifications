@@ -46,7 +46,7 @@ class LocalChannelsTest extends TestCase
             ->once()
             ->withArgs(fn ($level, $message) => $level === 'warning' && $message === 'logged body');
 
-        $channel = new LogChannel();
+        $channel = new LogChannel;
 
         $this->assertTrue($channel->send(new NotificationMessage('logged body', level: 'warning')));
     }
@@ -105,7 +105,7 @@ class LocalChannelsTest extends TestCase
 
     public function test_console_channel_writes_to_injected_output(): void
     {
-        $output = new BufferedOutput();
+        $output = new BufferedOutput;
         $channel = new ConsoleChannel([], $output);
 
         $this->assertTrue($channel->send(new NotificationMessage('console body', level: 'info')));

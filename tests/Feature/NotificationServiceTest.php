@@ -19,8 +19,8 @@ class NotificationServiceTest extends TestCase
 {
     public function test_config_is_merged_under_the_module_namespace(): void
     {
-        $this->assertIsArray(config('notifications.channels'));
-        $this->assertArrayHasKey('log', config('notifications.channels'));
+        $this->assertIsArray(config('laranail.notifications.channels'));
+        $this->assertArrayHasKey('log', config('laranail.notifications.channels'));
     }
 
     public function test_service_resolves_from_the_container(): void

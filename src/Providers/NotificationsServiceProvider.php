@@ -21,14 +21,14 @@ class NotificationsServiceProvider extends ServiceProvider implements Deferrable
 {
     public function register(): void
     {
-        $this->mergeConfigFrom($this->configPath(), 'notifications');
+        $this->mergeConfigFrom($this->configPath(), 'laranail.notifications');
 
         $this->app->singleton(NotificationService::class, static function (Application $app): NotificationService {
             /** @var Repository $config */
             $config = $app->make('config');
 
             /** @var array<string, mixed> $settings */
-            $settings = (array) $config->get('notifications', []);
+            $settings = (array) $config->get('laranail.notifications', []);
 
             $logger = $app->bound(LoggerInterface::class) ? $app->make(LoggerInterface::class) : null;
 
@@ -41,8 +41,8 @@ class NotificationsServiceProvider extends ServiceProvider implements Deferrable
     public function boot(): void
     {
         $this->publishes([
-            $this->configPath() => config_path('notifications.php'),
-        ], 'laranail-notifications');
+            $this->configPath() => config_path('laranail/notifications.php'),
+        ], 'laranail::notifications-config');
     }
 
     /**

@@ -4,7 +4,7 @@ All notable changes to `laranail/notifications` are documented here.
 
 The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [Unreleased]
+## [0.1.0] - 2026-08-15
 
 ### Changed
 
@@ -17,8 +17,6 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) and 
 
 The `notifications` database table and queue name are unchanged — they are not config keys and share
 the word by coincidence.
-
-## [0.1.0] - 2026-07-11
 
 Initial public release.
 

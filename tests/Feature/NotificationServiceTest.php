@@ -4,16 +4,17 @@ declare(strict_types=1);
 
 namespace Simtabi\Laranail\Notifications\Tests\Feature;
 
+use stdClass;
+use InvalidArgumentException;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Queue;
-use InvalidArgumentException;
 use PHPUnit\Framework\Attributes\Group;
+use Simtabi\Laranail\Notifications\Tests\TestCase;
 use Simtabi\Laranail\Notifications\Channels\LogChannel;
 use Simtabi\Laranail\Notifications\Channels\SlackChannel;
-use Simtabi\Laranail\Notifications\DataTransferObjects\NotificationMessage;
 use Simtabi\Laranail\Notifications\Jobs\SendQueuedNotification;
 use Simtabi\Laranail\Notifications\Services\NotificationService;
-use Simtabi\Laranail\Notifications\Tests\TestCase;
+use Simtabi\Laranail\Notifications\DataTransferObjects\NotificationMessage;
 
 class NotificationServiceTest extends TestCase
 {
@@ -33,7 +34,7 @@ class NotificationServiceTest extends TestCase
     {
         $service = new NotificationService([
             'channels' => [
-                'log' => ['enabled' => true],
+                'log'   => ['enabled' => true],
                 'slack' => ['enabled' => true, 'webhook_url' => 'https://hooks.slack.com/x'],
             ],
         ]);
@@ -47,7 +48,7 @@ class NotificationServiceTest extends TestCase
     {
         $service = new NotificationService([
             'channels' => [
-                'evil' => ['class' => \stdClass::class],
+                'evil' => ['class' => stdClass::class],
             ],
         ]);
 
@@ -61,7 +62,7 @@ class NotificationServiceTest extends TestCase
     {
         $this->expectException(InvalidArgumentException::class);
 
-        (new NotificationService())->registerChannel('nope', new LogChannel());
+        (new NotificationService)->registerChannel('nope', new LogChannel);
     }
 
     #[Group('security')]
@@ -69,7 +70,7 @@ class NotificationServiceTest extends TestCase
     {
         $this->expectException(InvalidArgumentException::class);
 
-        (new NotificationService())->setDefaultChannels(['log', 'bogus']);
+        (new NotificationService)->setDefaultChannels(['log', 'bogus']);
     }
 
     public function test_channels_selector_accepts_string(): void
@@ -126,9 +127,9 @@ class NotificationServiceTest extends TestCase
         Queue::fake();
 
         $service = new NotificationService([
-            'queueable' => true,
+            'queueable'  => true,
             'queue_name' => 'notifications',
-            'channels' => ['log' => ['enabled' => true]],
+            'channels'   => ['log' => ['enabled' => true]],
         ]);
 
         $result = $service->send('queued body', [], 'log');
@@ -141,7 +142,7 @@ class NotificationServiceTest extends TestCase
             fn (SendQueuedNotification $job): bool => is_array($job->message)
             && $job->message['body'] === 'queued body'
             && $job->channels === ['log']
-            && ($job->message['options']['queued'] ?? false) === true
+            && ($job->message['options']['queued'] ?? false) === true,
         );
     }
 

@@ -7,21 +7,16 @@ namespace Simtabi\Laranail\Notifications\Tests\Unit;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Mail;
 use PHPUnit\Framework\Attributes\Group;
-use Simtabi\Laranail\Notifications\Channels\ConsoleChannel;
-use Simtabi\Laranail\Notifications\Channels\EmailChannel;
-use Simtabi\Laranail\Notifications\Channels\SmsChannel;
-use Simtabi\Laranail\Notifications\DataTransferObjects\NotificationMessage;
 use Simtabi\Laranail\Notifications\Tests\TestCase;
-use Symfony\Component\Console\Output\BufferedOutput;
 use Symfony\Component\Console\Output\ConsoleOutput;
+use Symfony\Component\Console\Output\BufferedOutput;
+use Simtabi\Laranail\Notifications\Channels\SmsChannel;
+use Simtabi\Laranail\Notifications\Channels\EmailChannel;
+use Simtabi\Laranail\Notifications\Channels\ConsoleChannel;
+use Simtabi\Laranail\Notifications\DataTransferObjects\NotificationMessage;
 
 class ChannelEdgeCasesTest extends TestCase
 {
-    private function message(string $body = 'hi'): NotificationMessage
-    {
-        return NotificationMessage::make($body);
-    }
-
     // ----- EmailChannel -----
 
     public function test_email_channel_sends_via_mail_facade(): void
@@ -83,7 +78,7 @@ class ChannelEdgeCasesTest extends TestCase
         $channel = new SmsChannel([
             'api_url' => 'https://api.example.com/send',
             'api_key' => 'k',
-            'from' => '+15555550000',
+            'from'    => '+15555550000',
         ]);
 
         $this->assertTrue($channel->send(new NotificationMessage('sms body', to: '+15555550100')));
@@ -99,7 +94,7 @@ class ChannelEdgeCasesTest extends TestCase
         $channel = new SmsChannel([
             'api_url' => 'https://api.example.com/send',
             'api_key' => 'k',
-            'from' => '+15555550000',
+            'from'    => '+15555550000',
         ]);
 
         $this->assertFalse($channel->send(new NotificationMessage('sms', to: '+15555550100')));
@@ -120,7 +115,7 @@ class ChannelEdgeCasesTest extends TestCase
 
     public function test_console_channel_writes_errors_to_error_output(): void
     {
-        $output = new ConsoleOutput();
+        $output = new ConsoleOutput;
         $channel = new ConsoleChannel([], $output);
 
         $message = new NotificationMessage('boom', level: 'error', options: ['code' => 500]);
@@ -130,7 +125,7 @@ class ChannelEdgeCasesTest extends TestCase
 
     public function test_console_channel_includes_data_when_enabled(): void
     {
-        $output = new BufferedOutput();
+        $output = new BufferedOutput;
         $channel = new ConsoleChannel(['show_data' => true], $output);
 
         $this->assertTrue($channel->send(new NotificationMessage('with data', options: ['k' => 'v'])));
@@ -142,7 +137,7 @@ class ChannelEdgeCasesTest extends TestCase
 
     public function test_console_channel_omits_data_when_disabled(): void
     {
-        $output = new BufferedOutput();
+        $output = new BufferedOutput;
         $channel = new ConsoleChannel(['show_data' => false], $output);
 
         $this->assertTrue($channel->send(new NotificationMessage('no data', options: ['k' => 'v'])));
@@ -159,5 +154,10 @@ class ChannelEdgeCasesTest extends TestCase
         ob_end_clean();
 
         $this->assertTrue($result);
+    }
+
+    private function message(string $body = 'hi'): NotificationMessage
+    {
+        return NotificationMessage::make($body);
     }
 }

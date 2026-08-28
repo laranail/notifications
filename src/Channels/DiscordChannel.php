@@ -4,11 +4,11 @@ declare(strict_types=1);
 
 namespace Simtabi\Laranail\Notifications\Channels;
 
-use Illuminate\Http\Client\ConnectionException;
-use Illuminate\Support\Facades\Http;
-use Simtabi\Laranail\Notifications\DataTransferObjects\NotificationMessage;
-use Simtabi\Laranail\Notifications\Support\GuardsOutboundUrls;
 use Throwable;
+use Illuminate\Support\Facades\Http;
+use Illuminate\Http\Client\ConnectionException;
+use Simtabi\Laranail\Notifications\Support\GuardsOutboundUrls;
+use Simtabi\Laranail\Notifications\DataTransferObjects\NotificationMessage;
 
 /**
  * Posts notifications to a Discord webhook.
@@ -30,20 +30,20 @@ class DiscordChannel extends AbstractNotificationChannel
     {
         $webhookUrl = $this->config['webhook_url'] ?? null;
 
-        if (!is_string($webhookUrl) || $webhookUrl === '') {
+        if (! is_string($webhookUrl) || $webhookUrl === '') {
             return false;
         }
 
-        if (!$this->isOutboundUrlAllowed($webhookUrl)) {
+        if (! $this->isOutboundUrlAllowed($webhookUrl)) {
             return false;
         }
 
         $payload = [
-            'content' => $message->body,
+            'content'  => $message->body,
             'username' => (string) $message->option('username', $this->config['username'] ?? 'Notification Bot'),
         ];
 
-        if (!empty($message->option('embeds'))) {
+        if (! empty($message->option('embeds'))) {
             $payload['embeds'] = $message->option('embeds');
         }
 
@@ -61,7 +61,7 @@ class DiscordChannel extends AbstractNotificationChannel
     protected function getDefaultConfig(): array
     {
         return [
-            'enabled' => true,
+            'enabled'  => true,
             'username' => 'Notification Bot',
         ];
     }

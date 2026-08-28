@@ -4,10 +4,10 @@ declare(strict_types=1);
 
 namespace Simtabi\Laranail\Notifications\Channels;
 
-use Illuminate\Http\Client\ConnectionException;
-use Illuminate\Support\Facades\Http;
-use Simtabi\Laranail\Notifications\DataTransferObjects\NotificationMessage;
 use Throwable;
+use Illuminate\Support\Facades\Http;
+use Illuminate\Http\Client\ConnectionException;
+use Simtabi\Laranail\Notifications\DataTransferObjects\NotificationMessage;
 
 /**
  * Best-effort SMS channel.
@@ -38,8 +38,8 @@ class SmsChannel extends AbstractNotificationChannel
 
         try {
             $response = Http::withToken((string) $apiKey)->post($apiUrl, [
-                'from' => $from,
-                'to' => $to,
+                'from'    => $from,
+                'to'      => $to,
                 'message' => $message->body,
             ]);
 

@@ -3,10 +3,10 @@
 declare(strict_types=1);
 
 use Rector\Config\RectorConfig;
-use Rector\Php71\Rector\TryCatch\MultiExceptionCatchRector;
-use Rector\Php83\Rector\ClassConst\AddTypeToConstRector;
-use Rector\Php83\Rector\ClassMethod\AddOverrideAttributeToOverriddenMethodsRector;
 use Rector\Set\ValueObject\LevelSetList;
+use Rector\Php83\Rector\ClassConst\AddTypeToConstRector;
+use Rector\Php71\Rector\TryCatch\MultiExceptionCatchRector;
+use Rector\Php83\Rector\ClassMethod\AddOverrideAttributeToOverriddenMethodsRector;
 
 /**
  * Floor guard only: pin to the PHP 8.3 set so no newer-only syntax slips below

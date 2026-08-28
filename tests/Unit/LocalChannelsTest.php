@@ -4,17 +4,17 @@ declare(strict_types=1);
 
 namespace Simtabi\Laranail\Notifications\Tests\Unit;
 
-use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Schema;
+use Simtabi\Laranail\Notifications\Tests\TestCase;
+use Symfony\Component\Console\Output\BufferedOutput;
+use Simtabi\Laranail\Notifications\Channels\LogChannel;
+use Simtabi\Laranail\Notifications\Channels\FileChannel;
 use Simtabi\Laranail\Notifications\Channels\CacheChannel;
 use Simtabi\Laranail\Notifications\Channels\ConsoleChannel;
 use Simtabi\Laranail\Notifications\Channels\DatabaseChannel;
-use Simtabi\Laranail\Notifications\Channels\FileChannel;
-use Simtabi\Laranail\Notifications\Channels\LogChannel;
 use Simtabi\Laranail\Notifications\DataTransferObjects\NotificationMessage;
-use Simtabi\Laranail\Notifications\Tests\TestCase;
-use Symfony\Component\Console\Output\BufferedOutput;
 
 class LocalChannelsTest extends TestCase
 {
@@ -46,7 +46,7 @@ class LocalChannelsTest extends TestCase
             ->once()
             ->withArgs(fn ($level, $message) => $level === 'warning' && $message === 'logged body');
 
-        $channel = new LogChannel();
+        $channel = new LogChannel;
 
         $this->assertTrue($channel->send(new NotificationMessage('logged body', level: 'warning')));
     }
@@ -105,7 +105,7 @@ class LocalChannelsTest extends TestCase
 
     public function test_console_channel_writes_to_injected_output(): void
     {
-        $output = new BufferedOutput();
+        $output = new BufferedOutput;
         $channel = new ConsoleChannel([], $output);
 
         $this->assertTrue($channel->send(new NotificationMessage('console body', level: 'info')));

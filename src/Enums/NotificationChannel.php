@@ -4,18 +4,18 @@ declare(strict_types=1);
 
 namespace Simtabi\Laranail\Notifications\Enums;
 
-use Simtabi\Laranail\Notifications\Channels\AppleBusinessMessagesChannel;
-use Simtabi\Laranail\Notifications\Channels\CacheChannel;
-use Simtabi\Laranail\Notifications\Channels\ConsoleChannel;
-use Simtabi\Laranail\Notifications\Channels\DatabaseChannel;
-use Simtabi\Laranail\Notifications\Channels\DiscordChannel;
-use Simtabi\Laranail\Notifications\Channels\EmailChannel;
-use Simtabi\Laranail\Notifications\Channels\FileChannel;
 use Simtabi\Laranail\Notifications\Channels\LogChannel;
-use Simtabi\Laranail\Notifications\Channels\PushChannel;
-use Simtabi\Laranail\Notifications\Channels\SlackChannel;
 use Simtabi\Laranail\Notifications\Channels\SmsChannel;
+use Simtabi\Laranail\Notifications\Channels\FileChannel;
+use Simtabi\Laranail\Notifications\Channels\PushChannel;
+use Simtabi\Laranail\Notifications\Channels\CacheChannel;
+use Simtabi\Laranail\Notifications\Channels\EmailChannel;
+use Simtabi\Laranail\Notifications\Channels\SlackChannel;
+use Simtabi\Laranail\Notifications\Channels\ConsoleChannel;
+use Simtabi\Laranail\Notifications\Channels\DiscordChannel;
 use Simtabi\Laranail\Notifications\Channels\WebhookChannel;
+use Simtabi\Laranail\Notifications\Channels\DatabaseChannel;
+use Simtabi\Laranail\Notifications\Channels\AppleBusinessMessagesChannel;
 use Simtabi\Laranail\Notifications\Contracts\NotificationChannelInterface;
 
 /**
@@ -43,22 +43,40 @@ enum NotificationChannel: string
     case APPLE_BUSINESS_MESSAGES = 'apple_business_messages';
 
     /**
+     * All channel keys.
+     *
+     * @return array<int, string>
+     */
+    public static function keys(): array
+    {
+        return array_map(static fn (self $case): string => $case->value, self::cases());
+    }
+
+    /**
+     * Resolve a string key to a case, or null when it is not a known channel.
+     */
+    public static function tryFromKey(string $key): ?self
+    {
+        return self::tryFrom($key);
+    }
+
+    /**
      * Human-readable label.
      */
     public function label(): string
     {
         return match ($this) {
-            self::LOG => 'Log',
-            self::EMAIL => 'Email',
-            self::DATABASE => 'Database',
-            self::CACHE => 'Cache',
-            self::FILE => 'File',
-            self::CONSOLE => 'Console',
-            self::WEBHOOK => 'Webhook',
-            self::SLACK => 'Slack',
-            self::DISCORD => 'Discord',
-            self::SMS => 'SMS',
-            self::PUSH => 'Push Notification',
+            self::LOG                     => 'Log',
+            self::EMAIL                   => 'Email',
+            self::DATABASE                => 'Database',
+            self::CACHE                   => 'Cache',
+            self::FILE                    => 'File',
+            self::CONSOLE                 => 'Console',
+            self::WEBHOOK                 => 'Webhook',
+            self::SLACK                   => 'Slack',
+            self::DISCORD                 => 'Discord',
+            self::SMS                     => 'SMS',
+            self::PUSH                    => 'Push Notification',
             self::APPLE_BUSINESS_MESSAGES => 'Apple Business Messages',
         };
     }
@@ -71,17 +89,17 @@ enum NotificationChannel: string
     public function channelClass(): string
     {
         return match ($this) {
-            self::LOG => LogChannel::class,
-            self::EMAIL => EmailChannel::class,
-            self::DATABASE => DatabaseChannel::class,
-            self::CACHE => CacheChannel::class,
-            self::FILE => FileChannel::class,
-            self::CONSOLE => ConsoleChannel::class,
-            self::WEBHOOK => WebhookChannel::class,
-            self::SLACK => SlackChannel::class,
-            self::DISCORD => DiscordChannel::class,
-            self::SMS => SmsChannel::class,
-            self::PUSH => PushChannel::class,
+            self::LOG                     => LogChannel::class,
+            self::EMAIL                   => EmailChannel::class,
+            self::DATABASE                => DatabaseChannel::class,
+            self::CACHE                   => CacheChannel::class,
+            self::FILE                    => FileChannel::class,
+            self::CONSOLE                 => ConsoleChannel::class,
+            self::WEBHOOK                 => WebhookChannel::class,
+            self::SLACK                   => SlackChannel::class,
+            self::DISCORD                 => DiscordChannel::class,
+            self::SMS                     => SmsChannel::class,
+            self::PUSH                    => PushChannel::class,
             self::APPLE_BUSINESS_MESSAGES => AppleBusinessMessagesChannel::class,
         };
     }
@@ -105,23 +123,5 @@ enum NotificationChannel: string
         return in_array($this, [
             self::WEBHOOK, self::SLACK, self::DISCORD, self::PUSH, self::APPLE_BUSINESS_MESSAGES,
         ], true);
-    }
-
-    /**
-     * All channel keys.
-     *
-     * @return array<int, string>
-     */
-    public static function keys(): array
-    {
-        return array_map(static fn (self $case): string => $case->value, self::cases());
-    }
-
-    /**
-     * Resolve a string key to a case, or null when it is not a known channel.
-     */
-    public static function tryFromKey(string $key): ?self
-    {
-        return self::tryFrom($key);
     }
 }

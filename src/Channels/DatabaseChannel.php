@@ -4,10 +4,10 @@ declare(strict_types=1);
 
 namespace Simtabi\Laranail\Notifications\Channels;
 
-use Illuminate\Database\ConnectionInterface;
-use Illuminate\Support\Facades\DB;
-use Simtabi\Laranail\Notifications\DataTransferObjects\NotificationMessage;
 use Throwable;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Database\ConnectionInterface;
+use Simtabi\Laranail\Notifications\DataTransferObjects\NotificationMessage;
 
 /**
  * Persists notifications as rows in a database table.
@@ -38,15 +38,15 @@ class DatabaseChannel extends AbstractNotificationChannel
         $data = $message->toData();
 
         $row = [
-            'message' => $message->body,
-            'data' => json_encode($data),
-            'type' => isset($data['type']) ? (string) $data['type'] : 'general',
-            'read' => false,
+            'message'    => $message->body,
+            'data'       => json_encode($data),
+            'type'       => isset($data['type']) ? (string) $data['type'] : 'general',
+            'read'       => false,
             'created_at' => now(),
             'updated_at' => now(),
         ];
 
-        if (!empty($data['user_id'])) {
+        if (! empty($data['user_id'])) {
             $row['user_id'] = $data['user_id'];
         }
 
@@ -63,7 +63,7 @@ class DatabaseChannel extends AbstractNotificationChannel
     {
         return [
             'enabled' => true,
-            'table' => 'notifications',
+            'table'   => 'notifications',
         ];
     }
 

@@ -4,11 +4,11 @@ declare(strict_types=1);
 
 namespace Simtabi\Laranail\Notifications\Channels;
 
-use Illuminate\Http\Client\ConnectionException;
-use Illuminate\Support\Facades\Http;
-use Simtabi\Laranail\Notifications\DataTransferObjects\NotificationMessage;
-use Simtabi\Laranail\Notifications\Support\GuardsOutboundUrls;
 use Throwable;
+use Illuminate\Support\Facades\Http;
+use Illuminate\Http\Client\ConnectionException;
+use Simtabi\Laranail\Notifications\Support\GuardsOutboundUrls;
+use Simtabi\Laranail\Notifications\DataTransferObjects\NotificationMessage;
 
 /**
  * Sends messages via the Apple Business Messages gateway.
@@ -40,31 +40,31 @@ class AppleBusinessMessagesChannel extends AbstractNotificationChannel
 
         $url = (string) ($this->config['api_url'] ?? 'https://mspgw.apple.com/v1/message');
 
-        if (!$this->isOutboundUrlAllowed($url)) {
+        if (! $this->isOutboundUrlAllowed($url)) {
             return false;
         }
 
         $payload = [
-            'businessId' => $businessId,
+            'businessId'     => $businessId,
             'conversationId' => $message->option('conversation_id', $recipientId),
-            'message' => [
-                'text' => $message->body,
+            'message'        => [
+                'text'   => $message->body,
                 'locale' => (string) $message->option('locale', 'en'),
             ],
         ];
 
-        if (!empty($message->option('suggestions'))) {
+        if (! empty($message->option('suggestions'))) {
             $payload['message']['suggestions'] = $message->option('suggestions');
         }
 
-        if (!empty($message->option('rich_link'))) {
+        if (! empty($message->option('rich_link'))) {
             $payload['message']['richLink'] = $message->option('rich_link');
         }
 
         try {
             $response = Http::withHeaders([
                 'Authorization' => 'Bearer ' . $this->generateJwt((string) $apiKey, (string) $apiSecret),
-                'Content-Type' => 'application/json',
+                'Content-Type'  => 'application/json',
             ])->post($url, $payload);
 
             return $response->successful();
@@ -73,6 +73,26 @@ class AppleBusinessMessagesChannel extends AbstractNotificationChannel
         } catch (Throwable) {
             return false;
         }
+    }
+
+    protected function getDefaultConfig(): array
+    {
+        return [
+            'enabled' => true,
+            'api_url' => 'https://mspgw.apple.com/v1/message',
+        ];
+    }
+
+    protected function getRequiredConfigKeys(): array
+    {
+        return ['business_id', 'api_key', 'api_secret'];
+    }
+
+    protected function performCustomValidation(): bool
+    {
+        $businessId = (string) ($this->config['business_id'] ?? '');
+
+        return preg_match('/^[a-f0-9]{8}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{12}$/i', $businessId) === 1;
     }
 
     /**
@@ -100,25 +120,5 @@ class AppleBusinessMessagesChannel extends AbstractNotificationChannel
     private function base64UrlEncode(string $value): string
     {
         return str_replace(['+', '/', '='], ['-', '_', ''], base64_encode($value));
-    }
-
-    protected function getDefaultConfig(): array
-    {
-        return [
-            'enabled' => true,
-            'api_url' => 'https://mspgw.apple.com/v1/message',
-        ];
-    }
-
-    protected function getRequiredConfigKeys(): array
-    {
-        return ['business_id', 'api_key', 'api_secret'];
-    }
-
-    protected function performCustomValidation(): bool
-    {
-        $businessId = (string) ($this->config['business_id'] ?? '');
-
-        return preg_match('/^[a-f0-9]{8}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{12}$/i', $businessId) === 1;
     }
 }

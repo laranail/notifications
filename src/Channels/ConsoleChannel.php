@@ -4,10 +4,10 @@ declare(strict_types=1);
 
 namespace Simtabi\Laranail\Notifications\Channels;
 
-use Simtabi\Laranail\Notifications\DataTransferObjects\NotificationMessage;
-use Symfony\Component\Console\Output\ConsoleOutputInterface;
-use Symfony\Component\Console\Output\OutputInterface;
 use Throwable;
+use Symfony\Component\Console\Output\OutputInterface;
+use Symfony\Component\Console\Output\ConsoleOutputInterface;
+use Simtabi\Laranail\Notifications\DataTransferObjects\NotificationMessage;
 
 /**
  * Writes notifications to the console.
@@ -54,6 +54,16 @@ class ConsoleChannel extends AbstractNotificationChannel
         }
     }
 
+    protected function getDefaultConfig(): array
+    {
+        return ['enabled' => true, 'show_data' => true];
+    }
+
+    protected function getRequiredConfigKeys(): array
+    {
+        return [];
+    }
+
     private function format(NotificationMessage $message): string
     {
         $line = '[' . strtoupper($message->level) . '] ' . $message->body;
@@ -79,20 +89,10 @@ class ConsoleChannel extends AbstractNotificationChannel
             ? (defined('STDERR') ? STDERR : @fopen('php://stderr', 'w'))
             : (defined('STDOUT') ? STDOUT : @fopen('php://stdout', 'w'));
 
-        if (!is_resource($stream)) {
+        if (! is_resource($stream)) {
             return false;
         }
 
         return fwrite($stream, $text) !== false;
-    }
-
-    protected function getDefaultConfig(): array
-    {
-        return ['enabled' => true, 'show_data' => true];
-    }
-
-    protected function getRequiredConfigKeys(): array
-    {
-        return [];
     }
 }

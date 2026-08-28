@@ -5,13 +5,13 @@ declare(strict_types=1);
 namespace Simtabi\Laranail\Notifications\Jobs;
 
 use Illuminate\Bus\Queueable;
-use Illuminate\Contracts\Container\Container;
+use Illuminate\Queue\SerializesModels;
+use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
-use Illuminate\Queue\InteractsWithQueue;
-use Illuminate\Queue\SerializesModels;
-use Simtabi\Laranail\Notifications\DataTransferObjects\NotificationMessage;
+use Illuminate\Contracts\Container\Container;
 use Simtabi\Laranail\Notifications\Services\NotificationService;
+use Simtabi\Laranail\Notifications\DataTransferObjects\NotificationMessage;
 
 /**
  * Queued notification delivery.
@@ -31,7 +31,7 @@ class SendQueuedNotification implements ShouldQueue
 
     /**
      * @param array{body: string, subject: string|null, to: string|array<int, string>|null, level: string, options: array<string, mixed>} $message
-     * @param array<int, string>                                                                                                          $channels
+     * @param array<int, string> $channels
      */
     public function __construct(
         public readonly array $message,

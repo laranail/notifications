@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace Simtabi\Laranail\Notifications\Tests\Unit;
 
-use Simtabi\Laranail\Notifications\DataTransferObjects\NotificationMessage;
 use Simtabi\Laranail\Notifications\Tests\TestCase;
+use Simtabi\Laranail\Notifications\DataTransferObjects\NotificationMessage;
 
 class NotificationMessageTest extends TestCase
 {
@@ -13,9 +13,9 @@ class NotificationMessageTest extends TestCase
     {
         $message = NotificationMessage::make('body', [
             'subject' => 'Subject',
-            'to' => 'a@b.com',
-            'level' => 'warning',
-            'extra' => 'kept',
+            'to'      => 'a@b.com',
+            'level'   => 'warning',
+            'extra'   => 'kept',
         ]);
 
         $this->assertSame('body', $message->body);

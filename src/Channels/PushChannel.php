@@ -4,11 +4,11 @@ declare(strict_types=1);
 
 namespace Simtabi\Laranail\Notifications\Channels;
 
-use Illuminate\Http\Client\ConnectionException;
-use Illuminate\Support\Facades\Http;
-use Simtabi\Laranail\Notifications\DataTransferObjects\NotificationMessage;
-use Simtabi\Laranail\Notifications\Support\GuardsOutboundUrls;
 use Throwable;
+use Illuminate\Support\Facades\Http;
+use Illuminate\Http\Client\ConnectionException;
+use Simtabi\Laranail\Notifications\Support\GuardsOutboundUrls;
+use Simtabi\Laranail\Notifications\DataTransferObjects\NotificationMessage;
 
 /**
  * Best-effort push channel (OneSignal-style HTTP API).
@@ -37,7 +37,7 @@ class PushChannel extends AbstractNotificationChannel
 
         $url = (string) ($this->config['api_url'] ?? 'https://onesignal.com/api/v1/notifications');
 
-        if (!$this->isOutboundUrlAllowed($url)) {
+        if (! $this->isOutboundUrlAllowed($url)) {
             return false;
         }
 
@@ -50,9 +50,9 @@ class PushChannel extends AbstractNotificationChannel
             $response = Http::withHeaders([
                 'Authorization' => 'Basic ' . (string) $apiKey,
             ])->post($url, [
-                'app_id' => $appId,
-                'headings' => ['en' => $title],
-                'contents' => ['en' => $message->body],
+                'app_id'            => $appId,
+                'headings'          => ['en' => $title],
+                'contents'          => ['en' => $message->body],
                 'included_segments' => $segments,
             ]);
 
@@ -67,9 +67,9 @@ class PushChannel extends AbstractNotificationChannel
     protected function getDefaultConfig(): array
     {
         return [
-            'enabled' => true,
+            'enabled'       => true,
             'default_title' => 'Notification',
-            'api_url' => 'https://onesignal.com/api/v1/notifications',
+            'api_url'       => 'https://onesignal.com/api/v1/notifications',
         ];
     }
 

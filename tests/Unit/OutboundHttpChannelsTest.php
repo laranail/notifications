@@ -4,23 +4,35 @@ declare(strict_types=1);
 
 namespace Simtabi\Laranail\Notifications\Tests\Unit;
 
-use Illuminate\Http\Client\ConnectionException;
 use Illuminate\Support\Facades\Http;
-use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\Group;
-use Simtabi\Laranail\Notifications\Channels\AppleBusinessMessagesChannel;
-use Simtabi\Laranail\Notifications\Channels\DiscordChannel;
+use PHPUnit\Framework\Attributes\DataProvider;
+use Illuminate\Http\Client\ConnectionException;
+use Simtabi\Laranail\Notifications\Tests\TestCase;
 use Simtabi\Laranail\Notifications\Channels\PushChannel;
 use Simtabi\Laranail\Notifications\Channels\SlackChannel;
+use Simtabi\Laranail\Notifications\Channels\DiscordChannel;
 use Simtabi\Laranail\Notifications\Channels\WebhookChannel;
+use Simtabi\Laranail\Notifications\Channels\AppleBusinessMessagesChannel;
 use Simtabi\Laranail\Notifications\DataTransferObjects\NotificationMessage;
-use Simtabi\Laranail\Notifications\Tests\TestCase;
 
 class OutboundHttpChannelsTest extends TestCase
 {
-    private function message(string $body = 'hello'): NotificationMessage
+    /**
+     * @return array<string, array{0: string}>
+     */
+    public static function blockedUrlProvider(): array
     {
-        return NotificationMessage::make($body);
+        return [
+            'aws metadata'    => ['http://169.254.169.254/latest/meta-data/'],
+            'localhost'       => ['http://localhost/hook'],
+            'rfc1918 10/8'    => ['http://10.0.0.1/hook'],
+            'rfc1918 192.168' => ['http://192.168.1.10/hook'],
+            'loopback ip'     => ['http://127.0.0.1/hook'],
+            'ipv6 loopback'   => ['http://[::1]/hook'],
+            'file scheme'     => ['file:///etc/passwd'],
+            'gopher scheme'   => ['gopher://example.com/'],
+        ];
     }
 
     public function test_webhook_success_returns_true_and_sends_expected_shape(): void
@@ -30,7 +42,7 @@ class OutboundHttpChannelsTest extends TestCase
         ]);
 
         $channel = new WebhookChannel([
-            'url' => 'https://example.com/hook',
+            'url'     => 'https://example.com/hook',
             'headers' => ['X-Token' => 'abc'],
         ]);
 
@@ -121,7 +133,7 @@ class OutboundHttpChannelsTest extends TestCase
         Http::assertSent(function ($request) {
             $bodyHasSecret = str_contains((string) $request->body(), 'super-secret');
 
-            return $request['app_id'] === 'app-1' && !$bodyHasSecret;
+            return $request['app_id'] === 'app-1' && ! $bodyHasSecret;
         });
     }
 
@@ -131,8 +143,8 @@ class OutboundHttpChannelsTest extends TestCase
 
         $channel = new AppleBusinessMessagesChannel([
             'business_id' => 'aaaaaaaa-bbbb-cccc-dddd-eeeeeeeeeeee',
-            'api_key' => 'k',
-            'api_secret' => 's',
+            'api_key'     => 'k',
+            'api_secret'  => 's',
         ]);
 
         // No recipient_id option -> failure, no HTTP.
@@ -147,8 +159,8 @@ class OutboundHttpChannelsTest extends TestCase
 
         $channel = new AppleBusinessMessagesChannel([
             'business_id' => 'aaaaaaaa-bbbb-cccc-dddd-eeeeeeeeeeee',
-            'api_key' => 'k',
-            'api_secret' => 's',
+            'api_key'     => 'k',
+            'api_secret'  => 's',
         ]);
 
         $message = new NotificationMessage('hi', options: ['recipient_id' => 'r-1']);
@@ -156,23 +168,6 @@ class OutboundHttpChannelsTest extends TestCase
         $this->assertTrue($channel->send($message));
 
         Http::assertSent(fn ($request) => $request['businessId'] === 'aaaaaaaa-bbbb-cccc-dddd-eeeeeeeeeeee');
-    }
-
-    /**
-     * @return array<string, array{0: string}>
-     */
-    public static function blockedUrlProvider(): array
-    {
-        return [
-            'aws metadata' => ['http://169.254.169.254/latest/meta-data/'],
-            'localhost' => ['http://localhost/hook'],
-            'rfc1918 10/8' => ['http://10.0.0.1/hook'],
-            'rfc1918 192.168' => ['http://192.168.1.10/hook'],
-            'loopback ip' => ['http://127.0.0.1/hook'],
-            'ipv6 loopback' => ['http://[::1]/hook'],
-            'file scheme' => ['file:///etc/passwd'],
-            'gopher scheme' => ['gopher://example.com/'],
-        ];
     }
 
     #[Group('security')]
@@ -222,12 +217,17 @@ class OutboundHttpChannelsTest extends TestCase
 
         $channel = new PushChannel([
             'api_key' => 'k',
-            'app_id' => 'a',
+            'app_id'  => 'a',
             'api_url' => $url,
         ]);
 
         $this->assertFalse($channel->send($this->message()));
 
         Http::assertNothingSent();
+    }
+
+    private function message(string $body = 'hello'): NotificationMessage
+    {
+        return NotificationMessage::make($body);
     }
 }

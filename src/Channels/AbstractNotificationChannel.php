@@ -48,7 +48,7 @@ abstract class AbstractNotificationChannel implements NotificationChannelInterfa
 
     public function validateConfig(): bool
     {
-        if (!$this->requiresConfig()) {
+        if (! $this->requiresConfig()) {
             return true;
         }
 

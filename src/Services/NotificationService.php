@@ -4,17 +4,17 @@ declare(strict_types=1);
 
 namespace Simtabi\Laranail\Notifications\Services;
 
-use Illuminate\Contracts\Container\Container;
-use InvalidArgumentException;
-use Psr\Log\LoggerAwareInterface;
-use Psr\Log\LoggerAwareTrait;
+use Throwable;
 use Psr\Log\LoggerInterface;
+use InvalidArgumentException;
+use Psr\Log\LoggerAwareTrait;
+use Psr\Log\LoggerAwareInterface;
+use Illuminate\Contracts\Container\Container;
+use Simtabi\Laranail\Notifications\Enums\NotificationChannel;
+use Simtabi\Laranail\Notifications\Support\NotificationResult;
+use Simtabi\Laranail\Notifications\Jobs\SendQueuedNotification;
 use Simtabi\Laranail\Notifications\Contracts\NotificationChannelInterface;
 use Simtabi\Laranail\Notifications\DataTransferObjects\NotificationMessage;
-use Simtabi\Laranail\Notifications\Enums\NotificationChannel;
-use Simtabi\Laranail\Notifications\Jobs\SendQueuedNotification;
-use Simtabi\Laranail\Notifications\Support\NotificationResult;
-use Throwable;
 
 /**
  * Orchestrates delivery of a {@see NotificationMessage} across one or more
@@ -65,6 +65,17 @@ class NotificationService implements LoggerAwareInterface
         $channelsConfig = is_array($config['channels'] ?? null) ? $config['channels'] : [];
 
         $this->registerDefaultChannels($channelsConfig);
+    }
+
+    /**
+     * Resolve a configured {@see NotificationService} from the container.
+     *
+     * Used by {@see SendQueuedNotification} so the queued job never serializes a
+     * live service (with its HTTP/mailer clients) — it rebuilds it on the worker.
+     */
+    public static function fromContainer(Container $container): self
+    {
+        return $container->make(self::class);
     }
 
     /**
@@ -119,8 +130,8 @@ class NotificationService implements LoggerAwareInterface
     /**
      * Send a notification.
      *
-     * @param NotificationMessage|string     $message  Typed payload, or a raw body string for convenience.
-     * @param array<string, mixed>           $data     Legacy data bag merged into the message when $message is a string.
+     * @param NotificationMessage|string $message Typed payload, or a raw body string for convenience.
+     * @param array<string, mixed> $data Legacy data bag merged into the message when $message is a string.
      * @param string|array<int, string>|null $channels Channel name, list of names, or null for the defaults.
      */
     public function send(
@@ -166,14 +177,14 @@ class NotificationService implements LoggerAwareInterface
                 continue;
             }
 
-            if (!$channel->isEnabled()) {
+            if (! $channel->isEnabled()) {
                 $this->logInfo("Channel '{$channelName}' is disabled");
                 $results[$channelName] = false;
 
                 continue;
             }
 
-            if ($channel->requiresConfig() && !$channel->validateConfig()) {
+            if ($channel->requiresConfig() && ! $channel->validateConfig()) {
                 $this->logWarning("Channel '{$channelName}' has invalid configuration");
                 $errors[$channelName] = 'Invalid configuration';
                 $results[$channelName] = false;
@@ -279,11 +290,11 @@ class NotificationService implements LoggerAwareInterface
 
     private function shouldQueue(NotificationMessage $message): bool
     {
-        if (!$this->queueable || $message->option('queued', false)) {
+        if (! $this->queueable || $message->option('queued', false)) {
             return false;
         }
 
-        return !$message->option('sync', false);
+        return ! $message->option('sync', false);
     }
 
     /**
@@ -301,17 +312,6 @@ class NotificationService implements LoggerAwareInterface
             ->onQueue($this->queueName);
 
         return new NotificationResult(['queued' => true]);
-    }
-
-    /**
-     * Resolve a configured {@see NotificationService} from the container.
-     *
-     * Used by {@see SendQueuedNotification} so the queued job never serializes a
-     * live service (with its HTTP/mailer clients) — it rebuilds it on the worker.
-     */
-    public static function fromContainer(Container $container): self
-    {
-        return $container->make(self::class);
     }
 
     private function assertAllowedChannel(string $name): void

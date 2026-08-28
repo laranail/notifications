@@ -21,9 +21,9 @@ abstract class TestCase extends OrchestraTestCase
         // Database: sqlite in-memory (channels that persist self-create tables).
         $app['config']->set('database.default', 'testing');
         $app['config']->set('database.connections.testing', [
-            'driver' => 'sqlite',
+            'driver'   => 'sqlite',
             'database' => ':memory:',
-            'prefix' => '',
+            'prefix'   => '',
         ]);
 
         // Cache: array driver (CacheChannel); Queue: sync (SendQueuedNotification).

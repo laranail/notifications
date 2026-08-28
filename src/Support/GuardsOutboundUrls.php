@@ -30,17 +30,17 @@ trait GuardsOutboundUrls
         $scheme = strtolower((string) parse_url($url, PHP_URL_SCHEME));
 
         // Only plain web schemes — explicitly excludes file://, gopher://, etc.
-        if (!in_array($scheme, ['http', 'https'], true)) {
+        if (! in_array($scheme, ['http', 'https'], true)) {
             return false;
         }
 
         $host = parse_url($url, PHP_URL_HOST);
 
-        if (!is_string($host) || $host === '') {
+        if (! is_string($host) || $host === '') {
             return false;
         }
 
-        return !$this->isBlockedHost($host);
+        return ! $this->isBlockedHost($host);
     }
 
     /**

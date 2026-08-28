@@ -4,11 +4,11 @@ declare(strict_types=1);
 
 namespace Simtabi\Laranail\Notifications\Channels;
 
-use Illuminate\Http\Client\ConnectionException;
-use Illuminate\Support\Facades\Http;
-use Simtabi\Laranail\Notifications\DataTransferObjects\NotificationMessage;
-use Simtabi\Laranail\Notifications\Support\GuardsOutboundUrls;
 use Throwable;
+use Illuminate\Support\Facades\Http;
+use Illuminate\Http\Client\ConnectionException;
+use Simtabi\Laranail\Notifications\Support\GuardsOutboundUrls;
+use Simtabi\Laranail\Notifications\DataTransferObjects\NotificationMessage;
 
 /**
  * Posts notifications to a Slack incoming webhook.
@@ -30,25 +30,25 @@ class SlackChannel extends AbstractNotificationChannel
     {
         $webhookUrl = $this->config['webhook_url'] ?? null;
 
-        if (!is_string($webhookUrl) || $webhookUrl === '') {
+        if (! is_string($webhookUrl) || $webhookUrl === '') {
             return false;
         }
 
-        if (!$this->isOutboundUrlAllowed($webhookUrl)) {
+        if (! $this->isOutboundUrlAllowed($webhookUrl)) {
             return false;
         }
 
         $payload = [
-            'text' => $message->body,
-            'username' => (string) $message->option('username', $this->config['username'] ?? 'Notification Bot'),
+            'text'       => $message->body,
+            'username'   => (string) $message->option('username', $this->config['username'] ?? 'Notification Bot'),
             'icon_emoji' => (string) $message->option('icon', $this->config['icon'] ?? ':robot_face:'),
         ];
 
-        if (!empty($message->option('channel'))) {
+        if (! empty($message->option('channel'))) {
             $payload['channel'] = $message->option('channel');
         }
 
-        if (!empty($message->option('attachments'))) {
+        if (! empty($message->option('attachments'))) {
             $payload['attachments'] = $message->option('attachments');
         }
 
@@ -66,9 +66,9 @@ class SlackChannel extends AbstractNotificationChannel
     protected function getDefaultConfig(): array
     {
         return [
-            'enabled' => true,
+            'enabled'  => true,
             'username' => 'Notification Bot',
-            'icon' => ':robot_face:',
+            'icon'     => ':robot_face:',
         ];
     }
 

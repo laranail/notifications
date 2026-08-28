@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace Simtabi\Laranail\Notifications\Channels;
 
+use Throwable;
 use Illuminate\Support\Facades\File;
 use Simtabi\Laranail\Notifications\DataTransferObjects\NotificationMessage;
-use Throwable;
 
 /**
  * Appends notifications as JSON lines to a file, with optional size rotation.
@@ -28,8 +28,8 @@ class FileChannel extends AbstractNotificationChannel
 
         $entry = [
             'timestamp' => now()->toISOString(),
-            'message' => $message->body,
-            'data' => $message->toData(),
+            'message'   => $message->body,
+            'data'      => $message->toData(),
         ];
 
         $line = json_encode($entry) . "\n";
@@ -47,19 +47,10 @@ class FileChannel extends AbstractNotificationChannel
         }
     }
 
-    private function rotateFileIfNeeded(string $path): void
-    {
-        $maxSize = (int) ($this->config['max_size'] ?? 10485760);
-
-        if (is_file($path) && filesize($path) > $maxSize) {
-            rename($path, $path . '.' . date('Y-m-d-H-i-s'));
-        }
-    }
-
     protected function getDefaultConfig(): array
     {
         return [
-            'enabled' => true,
+            'enabled'  => true,
             'rotation' => false,
             'max_size' => 10485760,
         ];
@@ -68,5 +59,14 @@ class FileChannel extends AbstractNotificationChannel
     protected function getRequiredConfigKeys(): array
     {
         return ['path'];
+    }
+
+    private function rotateFileIfNeeded(string $path): void
+    {
+        $maxSize = (int) ($this->config['max_size'] ?? 10485760);
+
+        if (is_file($path) && filesize($path) > $maxSize) {
+            rename($path, $path . '.' . date('Y-m-d-H-i-s'));
+        }
     }
 }

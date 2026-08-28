@@ -14,8 +14,8 @@ namespace Simtabi\Laranail\Notifications\Support;
 final readonly class NotificationResult
 {
     /**
-     * @param array<string, bool>   $results Channel name => delivered?
-     * @param array<string, string> $errors  Channel name => caller-safe error message.
+     * @param array<string, bool> $results Channel name => delivered?
+     * @param array<string, string> $errors Channel name => caller-safe error message.
      */
     public function __construct(
         private array $results,
@@ -24,12 +24,12 @@ final readonly class NotificationResult
 
     public function isSuccessful(): bool
     {
-        return empty($this->errors) && !in_array(false, $this->results, true);
+        return empty($this->errors) && ! in_array(false, $this->results, true);
     }
 
     public function hasPartialSuccess(): bool
     {
-        return !empty($this->errors) || in_array(false, $this->results, true);
+        return ! empty($this->errors) || in_array(false, $this->results, true);
     }
 
     /**
@@ -74,11 +74,11 @@ final readonly class NotificationResult
     {
         return [
             'successful' => $this->isSuccessful(),
-            'results' => $this->results,
-            'errors' => $this->errors,
-            'channels' => [
+            'results'    => $this->results,
+            'errors'     => $this->errors,
+            'channels'   => [
                 'successful' => $this->getSuccessfulChannels(),
-                'failed' => $this->getFailedChannels(),
+                'failed'     => $this->getFailedChannels(),
             ],
         ];
     }

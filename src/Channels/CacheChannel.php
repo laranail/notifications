@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace Simtabi\Laranail\Notifications\Channels;
 
+use Throwable;
 use Illuminate\Support\Facades\Cache;
 use Simtabi\Laranail\Notifications\DataTransferObjects\NotificationMessage;
-use Throwable;
 
 /**
  * Stores notifications in the cache under a (prefixed) key for later retrieval.
@@ -25,8 +25,8 @@ class CacheChannel extends AbstractNotificationChannel
         $ttl = (int) ($this->config['ttl'] ?? 3600);
 
         $payload = [
-            'message' => $message->body,
-            'data' => $data,
+            'message'   => $message->body,
+            'data'      => $data,
             'timestamp' => now()->toISOString(),
         ];
 
@@ -39,6 +39,20 @@ class CacheChannel extends AbstractNotificationChannel
         }
     }
 
+    protected function getDefaultConfig(): array
+    {
+        return [
+            'enabled'    => true,
+            'key_prefix' => 'notification_',
+            'ttl'        => 3600,
+        ];
+    }
+
+    protected function getRequiredConfigKeys(): array
+    {
+        return [];
+    }
+
     /**
      * @param array<string, mixed> $data
      */
@@ -48,19 +62,5 @@ class CacheChannel extends AbstractNotificationChannel
         $id = isset($data['id']) ? (string) $data['id'] : uniqid();
 
         return $prefix . $id;
-    }
-
-    protected function getDefaultConfig(): array
-    {
-        return [
-            'enabled' => true,
-            'key_prefix' => 'notification_',
-            'ttl' => 3600,
-        ];
-    }
-
-    protected function getRequiredConfigKeys(): array
-    {
-        return [];
     }
 }

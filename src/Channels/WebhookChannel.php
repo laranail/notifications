@@ -4,11 +4,11 @@ declare(strict_types=1);
 
 namespace Simtabi\Laranail\Notifications\Channels;
 
-use Illuminate\Http\Client\ConnectionException;
-use Illuminate\Support\Facades\Http;
-use Simtabi\Laranail\Notifications\DataTransferObjects\NotificationMessage;
-use Simtabi\Laranail\Notifications\Support\GuardsOutboundUrls;
 use Throwable;
+use Illuminate\Support\Facades\Http;
+use Illuminate\Http\Client\ConnectionException;
+use Simtabi\Laranail\Notifications\Support\GuardsOutboundUrls;
+use Simtabi\Laranail\Notifications\DataTransferObjects\NotificationMessage;
 
 /**
  * Delivers notifications to an arbitrary configured webhook endpoint.
@@ -33,11 +33,11 @@ class WebhookChannel extends AbstractNotificationChannel
     {
         $url = $this->config['url'] ?? null;
 
-        if (!is_string($url) || $url === '') {
+        if (! is_string($url) || $url === '') {
             return false;
         }
 
-        if (!$this->isOutboundUrlAllowed($url)) {
+        if (! $this->isOutboundUrlAllowed($url)) {
             return false;
         }
 
@@ -45,12 +45,12 @@ class WebhookChannel extends AbstractNotificationChannel
         $headers = is_array($this->config['headers'] ?? null) ? $this->config['headers'] : [];
         $method = strtoupper((string) ($this->config['method'] ?? 'POST'));
 
-        if (!in_array($method, self::ALLOWED_METHODS, true)) {
+        if (! in_array($method, self::ALLOWED_METHODS, true)) {
             $method = 'POST';
         }
 
         $payload = array_merge([
-            'message' => $message->body,
+            'message'   => $message->body,
             'timestamp' => now()->toISOString(),
         ], $message->toData());
 
@@ -58,11 +58,11 @@ class WebhookChannel extends AbstractNotificationChannel
             $request = Http::withHeaders($headers);
 
             $response = match ($method) {
-                'GET' => $request->get($url, $payload),
-                'PUT' => $request->put($url, $payload),
-                'PATCH' => $request->patch($url, $payload),
+                'GET'    => $request->get($url, $payload),
+                'PUT'    => $request->put($url, $payload),
+                'PATCH'  => $request->patch($url, $payload),
                 'DELETE' => $request->delete($url, $payload),
-                default => $request->post($url, $payload),
+                default  => $request->post($url, $payload),
             };
 
             return $response->successful();
@@ -77,7 +77,7 @@ class WebhookChannel extends AbstractNotificationChannel
     {
         return [
             'enabled' => true,
-            'method' => 'POST',
+            'method'  => 'POST',
             'headers' => [],
         ];
     }

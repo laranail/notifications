@@ -19,7 +19,7 @@ final readonly class NotificationMessage
 {
     /**
      * @param string|array<int, string>|null $to
-     * @param array<string, mixed>           $options
+     * @param array<string, mixed> $options
      */
     public function __construct(
         public string $body,
@@ -134,10 +134,10 @@ final readonly class NotificationMessage
     public function toArray(): array
     {
         return [
-            'body' => $this->body,
+            'body'    => $this->body,
             'subject' => $this->subject,
-            'to' => $this->to,
-            'level' => $this->level,
+            'to'      => $this->to,
+            'level'   => $this->level,
             'options' => $this->options,
         ];
     }

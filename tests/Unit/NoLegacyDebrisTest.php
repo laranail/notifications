@@ -4,10 +4,12 @@ declare(strict_types=1);
 
 namespace Simtabi\Laranail\Notifications\Tests\Unit;
 
-use PHPUnit\Framework\Attributes\Group;
+use SplFileInfo;
+use FilesystemIterator;
+use RecursiveIteratorIterator;
 use PHPUnit\Framework\TestCase;
 use RecursiveDirectoryIterator;
-use RecursiveIteratorIterator;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Guards against pre-rename authorship debris (Omar Chouman / personal email /
@@ -40,11 +42,11 @@ class NoLegacyDebrisTest extends TestCase
         }
         foreach ($scan as $dir) {
             $path = $root . '/' . $dir;
-            if (!is_dir($path)) {
+            if (! is_dir($path)) {
                 continue;
             }
-            foreach (new RecursiveIteratorIterator(new RecursiveDirectoryIterator($path, \FilesystemIterator::SKIP_DOTS)) as $file) {
-                /** @var \SplFileInfo $file */
+            foreach (new RecursiveIteratorIterator(new RecursiveDirectoryIterator($path, FilesystemIterator::SKIP_DOTS)) as $file) {
+                /** @var SplFileInfo $file */
                 if ($file->isFile()) {
                     $files[] = $file->getPathname();
                 }

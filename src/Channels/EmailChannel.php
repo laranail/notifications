@@ -4,10 +4,10 @@ declare(strict_types=1);
 
 namespace Simtabi\Laranail\Notifications\Channels;
 
+use Throwable;
 use Illuminate\Mail\Message;
 use Illuminate\Support\Facades\Mail;
 use Simtabi\Laranail\Notifications\DataTransferObjects\NotificationMessage;
-use Throwable;
 
 /**
  * Sends notifications as plain-text email via Laravel's Mail facade.
@@ -36,7 +36,7 @@ class EmailChannel extends AbstractNotificationChannel
                 /** @var string|array<int, string> $to */
                 $mail->to(is_array($to) ? $to : [$to])->subject($subject);
 
-                if (!empty($from)) {
+                if (! empty($from)) {
                     $mail->from((string) $from);
                 }
             });
@@ -50,7 +50,7 @@ class EmailChannel extends AbstractNotificationChannel
     protected function getDefaultConfig(): array
     {
         return [
-            'enabled' => true,
+            'enabled'         => true,
             'default_subject' => 'System Notification',
         ];
     }

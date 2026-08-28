@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace Simtabi\Laranail\Notifications\Channels;
 
-use Illuminate\Support\Facades\Log;
 use Psr\Log\LoggerAwareTrait;
+use Illuminate\Support\Facades\Log;
 use Simtabi\Laranail\Notifications\DataTransferObjects\NotificationMessage;
 
 /**

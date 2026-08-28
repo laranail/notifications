@@ -4,11 +4,11 @@ declare(strict_types=1);
 
 namespace Simtabi\Laranail\Notifications\Providers;
 
+use Psr\Log\LoggerInterface;
+use Illuminate\Support\ServiceProvider;
 use Illuminate\Contracts\Config\Repository;
 use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Contracts\Support\DeferrableProvider;
-use Illuminate\Support\ServiceProvider;
-use Psr\Log\LoggerInterface;
 use Simtabi\Laranail\Notifications\Services\NotificationService;
 
 /**

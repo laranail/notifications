@@ -80,8 +80,8 @@
         "test:coverage": "pest --coverage --min=70",
         "analyse": "phpstan analyse",
         "format": "@pint-fix",
-        "pint": "@php vendor/bin/laranail-pint --test",
-        "pint-fix": "@php vendor/bin/laranail-pint --parallel",
+        "pint": "vendor/bin/pint --test",
+        "pint-fix": "vendor/bin/pint",
         "lint": [
             "@pint",
             "@analyse"

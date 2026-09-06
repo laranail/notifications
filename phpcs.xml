@@ -24,6 +24,11 @@
     <rule ref="PSR12">
         <exclude name="Squiz.WhiteSpace.ScopeClosingBrace.ContentBefore"/>
         <exclude name="PSR2.Classes.ClassDeclaration.OpenBraceNewLine"/>
+        <!-- `new Foo` vs `new Foo()`. Pint's new_with_parentheses fixer owns
+             this, and the two cannot both be satisfied: running phpcbf took
+             PHPCS to 0 errors, and Pint then stripped every parenthesis back
+             out. Measured on this tree - all 8 errors were this one code. -->
+        <exclude name="PSR12.Classes.ClassInstantiation.MissingParentheses"/>
     </rule>
 
     <!-- Test methods follow PHPUnit's snake_case convention. -->

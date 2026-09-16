@@ -7,6 +7,12 @@
     <arg name="colors"/>
 
     <!-- Line-length and similar warnings stay visible but do not fail the gate. -->
+    <!-- NOTE: `ignore_warnings_on_exit` was REMOVED in PHP_CodeSniffer 4.0 and CI
+         resolves 4.x, so this line does nothing. It is left in place only for a
+         3.x run; do not rely on it. Under 4.x a warning fails the build, and the
+         sniff that produces it has to be excluded by name; see
+         laranail/toolkit does after 186 line-length warnings turned its gate red
+         with zero errors. -->
     <config name="ignore_warnings_on_exit" value="1"/>
 
     <!-- Paths to check -->

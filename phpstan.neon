@@ -20,6 +20,13 @@ parameters:
         - vendor/autoload.php
 
     ignoreErrors:
+        # larastan validates a view-string literal against a skeleton app that never
+        # boots this package's provider, so a namespace registered at RUNTIME is
+        # invisible to it and every `view()` / `View::make()` call reads as an error.
+        # The views exist; the suite renders them. Broad on purpose -- the narrow
+        # forms missed `static method`, `Contracts\View\Factory` and the helper,
+        # each of which had to be discovered from a red run.
+        - '#expects view-string, string given#'
         # Laravel facades / magic helpers resolve dynamically.
         - '#Call to an undefined method Illuminate\\.*#'
         - '#Access to an undefined property Illuminate\\.*#'

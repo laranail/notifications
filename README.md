@@ -3,7 +3,7 @@
 [![Tests](https://github.com/laranail/notifications/actions/workflows/tests.yml/badge.svg)](https://github.com/laranail/notifications/actions/workflows/tests.yml)
 [![License: MIT](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
 
-`laranail/notifications` is not published to Packagist, so there is no registry-version badge to show — see [Install](#install).
+`laranail/notifications` is not published to Packagist, so there is no registry-version badge to show: see [Install](#install).
 
 > Multi-channel notifications for Laravel — 12 SSRF-guarded channels (email, log, database, cache, slack, discord, push, sms, webhook, file, console, apple-business-messages) behind one unified, typed fluent API where `send()`/`broadcast()` return a rich `NotificationResult`. Fail-soft, extensible, queueable.
 

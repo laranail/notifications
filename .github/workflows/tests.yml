@@ -83,6 +83,22 @@ jobs:
       - name: Run PHPStan
         run: vendor/bin/phpstan analyse --error-format=github
 
+      # The family's Pint rules live in laranail/package-tools, which every other
+      # package runs through vendor/bin/laranail-pint. This one cannot: it supports
+      # PHP ^8.3 and package-tools needs ^8.4.1, so composer refuses it even as a dev
+      # dependency (f2d6177). pint.json is therefore a copy of the shared config, and
+      # a copy drifts unless something fails when it does. This is that something;
+      # a failed download fails the step too, rather than passing on nothing.
+      - name: Local Pint config matches the shared one
+        run: |
+          set -euo pipefail
+          curl -fsSL https://raw.githubusercontent.com/laranail/package-tools/main/pint.json \
+            -o "$RUNNER_TEMP/shared-pint.json"
+          jq -S . "$RUNNER_TEMP/shared-pint.json" > "$RUNNER_TEMP/shared.json"
+          jq -S . pint.json > "$RUNNER_TEMP/local.json"
+          diff -u "$RUNNER_TEMP/shared.json" "$RUNNER_TEMP/local.json" \
+            || { echo "::error file=pint.json::pint.json has drifted from laranail/package-tools' pint.json; copy it across."; exit 1; }
+
       - name: Run Pint (Code Style)
         run: vendor/bin/pint --test
 

@@ -7,19 +7,19 @@ Send your first multi-channel notification and read the result. For the full ref
 
 ```bash
 composer require laranail/notifications
-php artisan vendor:publish --tag=laranail-notifications
+php artisan vendor:publish --tag=laranail::notifications-config
 ```
 
 The `NotificationsServiceProvider` is auto-discovered. See [Installation](installation.md) for details.
 
 ## 2. Configure a channel
 
-Set the channel's keys in `config/notifications.php` (or via env) — e.g. Slack's incoming-webhook URL:
+Set the channel's keys in `config/laranail/notifications.php` (or via env) — e.g. Slack's incoming-webhook URL:
 
 ```php
-// config/notifications.php
+// config/laranail/notifications.php
 'channels' => [
-    'slack' => ['webhook_url' => env('NOTIFICATIONS_SLACK_WEBHOOK_URL')],
+    'slack' => ['webhook_url' => env('SLACK_WEBHOOK_URL')],
 ],
 ```
 

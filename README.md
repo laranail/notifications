@@ -15,6 +15,23 @@ Compatible with PHP `^8.3 || ^8.4 || ^8.5` and Laravel `^13.0`.
 composer require laranail/notifications
 ```
 
+## Quick start
+
+```php
+use Simtabi\Laranail\Notifications\Facades\Notifications;
+
+$result = Notifications::send(
+    message: 'Nightly backup completed',
+    data: ['size_mb' => 142],
+    channels: ['log'],
+);
+
+$result->isSuccessful();       // true
+$result->getFailedChannels();  // []
+```
+
+The full walkthrough is in [Getting started](docs/getting-started.md); everything else is in the [documentation index](#documentation).
+
 ## Documentation
 
 Full documentation is at **[opensource.simtabi.com/documentation/laranail/notifications](https://opensource.simtabi.com/documentation/laranail/notifications/)** — getting started, the channels, the typed result object, SSRF guarding, writing custom channels, queued delivery, and configuration.

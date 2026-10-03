@@ -15,7 +15,27 @@ Compatible with PHP `^8.3 || ^8.4 || ^8.5` and Laravel `^13.0`.
 composer require laranail/notifications
 ```
 
-## Quick start
+## Quick start guide and usage
+
+### Getting started
+
+The provider is auto-discovered and the `log` channel is on by default, so the example below
+works straight after install. To reach anything else:
+
+1. Publish the config if you want to edit it (it lands in `config/laranail/notifications.php`):
+
+   ```bash
+   php artisan vendor:publish --tag=laranail::notifications-config
+   ```
+
+2. Enable each extra channel through its env keys, e.g. Slack:
+
+   ```dotenv
+   NOTIFICATIONS_SLACK_ENABLED=true
+   SLACK_WEBHOOK_URL=https://hooks.slack.com/services/...
+   ```
+
+### Usage
 
 ```php
 use Simtabi\Laranail\Notifications\Facades\Notifications;
@@ -28,6 +48,12 @@ $result = Notifications::send(
 
 $result->isSuccessful();       // true
 $result->getFailedChannels();  // []
+```
+
+Broadcast to every registered channel:
+
+```php
+Notifications::broadcast('Server is on fire!', ['host' => gethostname()], 'critical');
 ```
 
 The full walkthrough is in [Getting started](docs/getting-started.md); everything else is in the [documentation index](#documentation).

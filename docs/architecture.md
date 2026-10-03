@@ -7,8 +7,9 @@ system. It boots lazily, resolves channels from a fixed allow-list, and fails so
 
 `NotificationsServiceProvider` is a `DeferrableProvider`: nothing boots until the
 `NotificationService` (or the `laranail.notifications` alias / `Notifications`
-facade) is first resolved. It merges `config/notifications.php` under the
-`notifications` key and publishes it with the `laranail-notifications` tag.
+facade) is first resolved. It merges its `config/notifications.php` under the
+`laranail.notifications` key and publishes it to `config/laranail/notifications.php`
+with the `laranail::notifications-config` tag.
 
 ## NotificationService
 

@@ -51,15 +51,15 @@ $service = app('laranail.notifications');
 ## Publishing the configuration
 
 The package ships sensible defaults that are merged into your application config
-under the `notifications` key, so it works out of the box with the `log`,
+under the `laranail.notifications` key, so it works out of the box with the `log`,
 `database`, and `cache` channels enabled. To customise channels, publish the
 config file:
 
 ```bash
-php artisan vendor:publish --tag=laranail-notifications
+php artisan vendor:publish --tag=laranail::notifications-config
 ```
 
-This writes `config/notifications.php` into your application. See
+This writes `config/laranail/notifications.php` into your application. See
 [Configuration](configuration.md) for every key and its default.
 
 ## Next steps

@@ -1,8 +1,8 @@
 # Configuration
 
-After publishing (`php artisan vendor:publish --tag=laranail-notifications`) the
-configuration lives in `config/notifications.php` and is merged into your
-application config under the `notifications` key. The defaults are also merged
+After publishing (`php artisan vendor:publish --tag=laranail::notifications-config`) the
+configuration lives in `config/laranail/notifications.php` and is merged into your
+application config under the `laranail.notifications` key. The defaults are also merged
 when the file is not published, so the package works without publishing.
 
 ## Top-level keys

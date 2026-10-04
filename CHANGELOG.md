@@ -4,6 +4,8 @@ All notable changes to `laranail/notifications` are documented here.
 
 The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [Unreleased]
+
 ## [0.1.0] - 2026-08-15
 
 ### Changed
@@ -27,3 +29,5 @@ Initial public release.
 - `NotificationService` with a channel registry, broadcast, queueable dispatch, and a fluent API.
 - `NotificationResult` value object with success / partial-success introspection.
 - Auto-discovered `NotificationsServiceProvider` and a publishable `config/notifications.php`.
+
+[Unreleased]: https://github.com/laranail/notifications/compare/v0.1.0...HEAD

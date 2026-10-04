@@ -58,7 +58,7 @@ Notifications::broadcast('Server is on fire!', ['host' => gethostname()], 'criti
 
 The full walkthrough is in [Getting started](docs/getting-started.md); everything else is in the [documentation index](#documentation).
 
-## Documentation
+## <a name="documentation"></a>Documentation
 
 Full documentation is at **[opensource.simtabi.com/documentation/laranail/notifications](https://opensource.simtabi.com/documentation/laranail/notifications/)** — getting started, the channels, the typed result object, SSRF guarding, writing custom channels, queued delivery, and configuration.
 

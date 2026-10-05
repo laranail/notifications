@@ -6,6 +6,15 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) and 
 
 ## [Unreleased]
 
+### Changed
+
+- `require` declares what `src/` uses directly: `illuminate/filesystem` and `illuminate/log`
+  (the `File` and `Log` facades in `FileChannel` and `LogChannel`), and `laravel/framework`, for
+  `Illuminate\Foundation\Bus\Dispatchable` and the `config_path()`/`now()` helpers, none of which
+  has a split package. `laravel/framework` replaces every `illuminate/*` split, so an application installs nothing
+  new. `tests/Unit/DeclaredRequirementsTest.php` now fails when `src/` uses an Illuminate component,
+  facade or global helper that `require` does not name.
+
 ## [0.1.0] - 2026-08-15
 
 ### Changed

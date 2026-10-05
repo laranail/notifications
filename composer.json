@@ -40,10 +40,13 @@
         "illuminate/cache": "^13.0",
         "illuminate/contracts": "^13.0",
         "illuminate/database": "^13.0",
+        "illuminate/filesystem": "^13.0",
         "illuminate/http": "^13.0",
+        "illuminate/log": "^13.0",
         "illuminate/mail": "^13.0",
         "illuminate/queue": "^13.0",
         "illuminate/support": "^13.0",
+        "laravel/framework": "^13.0",
         "psr/log": "^3.0"
     },
     "require-dev": {

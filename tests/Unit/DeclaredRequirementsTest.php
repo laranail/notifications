@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-/**
+/*
  * Every Illuminate component that src/ uses is declared in `require`.
  *
  * Testbench installs the whole framework, so an undeclared component passes every test here and

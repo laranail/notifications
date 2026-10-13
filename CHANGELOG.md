@@ -6,6 +6,17 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) and 
 
 ## [Unreleased]
 
+### Fixed
+
+- **`ConsoleChannel` sent error-level lines to stdout when handed a command's output.**
+  `Illuminate\Console\Command::run()` wraps the terminal output in an `OutputStyle`, which is not a
+  `ConsoleOutputInterface`, so the `instanceof` check never found the error stream. The channel now
+  unwraps the style first, a local copy of `laranail/console`'s `ErrorOutput::unwrap()` since this
+  module carries no `laranail/*` dependency. Nothing in the package passes it an `OutputStyle`
+  today; an application that injected `$this->output` from a command did. `require` now names
+  `illuminate/console` for `OutputStyle`; `laravel/framework` already replaces it, so an
+  application installs nothing new.
+
 ### Changed
 
 - `require` declares what `src/` uses directly: `illuminate/filesystem` and `illuminate/log`

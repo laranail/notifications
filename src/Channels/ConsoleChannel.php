@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Simtabi\Laranail\Notifications\Channels;
 
 use Throwable;
+use Illuminate\Console\OutputStyle;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Output\ConsoleOutputInterface;
 use Simtabi\Laranail\Notifications\DataTransferObjects\NotificationMessage;
@@ -16,6 +17,12 @@ use Simtabi\Laranail\Notifications\DataTransferObjects\NotificationMessage;
  * legacy adapter delegated to `laranail/console-tools`, which is removed here.
  * Output goes to an injected {@see OutputInterface} when one is available,
  * otherwise straight to STDOUT/STDERR via `fwrite` with a safe fallback.
+ *
+ * Error-level lines go to the error stream. A command's output is an {@see OutputStyle}, which
+ * `Illuminate\Console\Command::run()` wraps around the terminal's `ConsoleOutput` and which is not
+ * a {@see ConsoleOutputInterface}, so it is unwrapped first. This is a local copy of
+ * `laranail/console`'s `Tools\Support\ErrorOutput::unwrap()`, kept local because this module
+ * carries no `laranail/*` dependency.
  */
 class ConsoleChannel extends AbstractNotificationChannel
 {
@@ -39,8 +46,10 @@ class ConsoleChannel extends AbstractNotificationChannel
 
         try {
             if ($this->output !== null) {
-                if ($isError && $this->output instanceof ConsoleOutputInterface) {
-                    $this->output->getErrorOutput()->writeln($line);
+                $console = $this->output instanceof OutputStyle ? $this->output->getOutput() : $this->output;
+
+                if ($isError && $console instanceof ConsoleOutputInterface) {
+                    $console->getErrorOutput()->writeln($line);
                 } else {
                     $this->output->writeln($line);
                 }

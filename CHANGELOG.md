@@ -19,6 +19,11 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) and 
 
 ### Changed
 
+- **Test credentials are generated at run time.** The one literal API key in the tests is now
+  generated with `random_bytes()`, since secret scanning reported such literals as leaks, and a
+  guard test fails on any literal left behind. The guard is a minimal local copy of
+  `laranail/package-tools`' check: package-tools requires PHP `^8.4.1`, and this package still
+  supports 8.3, so it is not added as a dependency.
 - `require` declares what `src/` uses directly: `illuminate/filesystem` and `illuminate/log`
   (the `File` and `Log` facades in `FileChannel` and `LogChannel`), and `laravel/framework`, for
   `Illuminate\Foundation\Bus\Dispatchable` and the `config_path()`/`now()` helpers, none of which

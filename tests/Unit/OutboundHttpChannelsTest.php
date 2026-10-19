@@ -126,12 +126,14 @@ class OutboundHttpChannelsTest extends TestCase
     {
         Http::fake(['onesignal.com/*' => Http::response(['id' => 'x'], 200)]);
 
-        $channel = new PushChannel(['api_key' => 'super-secret', 'app_id' => 'app-1']);
+        // Generated per run: a literal API key is reported by secret scanning as a leak.
+        $apiKey = bin2hex(random_bytes(16));
+        $channel = new PushChannel(['api_key' => $apiKey, 'app_id' => 'app-1']);
 
         $this->assertTrue($channel->send($this->message('push body')));
 
-        Http::assertSent(function ($request) {
-            $bodyHasSecret = str_contains((string) $request->body(), 'super-secret');
+        Http::assertSent(function ($request) use ($apiKey) {
+            $bodyHasSecret = str_contains((string) $request->body(), $apiKey);
 
             return $request['app_id'] === 'app-1' && ! $bodyHasSecret;
         });

@@ -19,6 +19,12 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) and 
 
 ### Changed
 
+- The local credential guard is ported to package-tools' 0.1.10 rules, which it had fallen behind:
+  it now also fails on a compound `TestCredentials` purpose, a strong-looking `new Password()`
+  literal and a dotted credential key, and leaves alone the false positives 0.1.10 excludes (route
+  names, casts, single validation rules, metadata keys). It declares itself (`@credential-guard-copy
+  reason=php-floor-below-package-tools mirrors=0.1.10`), so package-tools' scheduled
+  `verify-credential-guard-copies.py` can catch the next drift.
 - **Test credentials are generated at run time.** The one literal API key in the tests is now
   generated with `random_bytes()`, since secret scanning reported such literals as leaks, and a
   guard test fails on any literal left behind. The guard is a minimal local copy of
